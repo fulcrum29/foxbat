@@ -1,0 +1,24 @@
+argo-cd:
+  redis-ha:
+    enabled: false
+  redisSecretInit:
+    enabled: false
+  redis:
+    enabled: false
+
+  controller:
+    replicas: 1
+
+  server:
+    replicas: 1
+
+  repoServer:
+    replicas: 1
+
+  applicationSet:
+    replicas: 0
+
+  dex:
+    enabled: false
+  notifications:
+    enabled: false

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: default
+  source:
+    path: /clusters/foxbat/argocd
+    repoURL: "https://github.com/fulcrum29/foxbat"
+    targetRevision: HEAD
+    helm:
+      releaseName: argocd
+      valueFiles:
+        - values.yaml
+  destination:
+    namespace: argocd
+    server: "https://kubernetes.default.svc"
