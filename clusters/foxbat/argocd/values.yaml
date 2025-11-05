@@ -2,9 +2,9 @@ argo-cd:
   redis-ha:
     enabled: false
   redisSecretInit:
-    enabled: false
+    enabled: true
   redis:
-    enabled: false
+    enabled: true
 
   controller:
     replicas: 1

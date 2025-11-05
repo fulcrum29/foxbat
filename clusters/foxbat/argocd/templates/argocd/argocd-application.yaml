@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    path: /clusters/foxbat/argocd
+    path: clusters/foxbat/argocd
     repoURL: "https://github.com/fulcrum29/foxbat"
     targetRevision: HEAD
     helm:
