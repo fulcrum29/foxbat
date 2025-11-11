@@ -1,4 +1,4 @@
 argocd:
   serverURL: "https://kubernetes.default.svc"
   sourceRepo: "https://github.com/fulcrum29/foxbat"
-  appPath: "clusters/foxbat/services/"
+  appPath: "clusters/foxbat/services"
