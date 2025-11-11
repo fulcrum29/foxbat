@@ -15,7 +15,7 @@ spec:
         - values.yaml
   destination:
     namespace: prometheus
-    server: "https://kubernetes.default.svc"
+    server: "{{ .Values.argocd.serverURL }}"
   syncPolicy:
     automated:
       enabled: true
