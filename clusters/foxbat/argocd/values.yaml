@@ -1,4 +1,7 @@
 argo-cd:
+  config:
+    params:
+      server.insecure: true
   redis-ha:
     enabled: false
   redisSecretInit:
