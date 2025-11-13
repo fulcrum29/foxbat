@@ -19,6 +19,7 @@ argo-cd:
 
   repoServer:
     replicas: 1
+    livenessProbe: ~
 
   applicationSet:
     replicas: 0
