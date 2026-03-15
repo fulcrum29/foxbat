@@ -35,3 +35,5 @@ go.work.sum
 all.yaml
 **/charts/*.tgz
 **/Chart.lock
+GEMINI.md
+AGENTS.md
