@@ -1,0 +1,13 @@
+<label class="uk-form-label" for="{{.Name}}">{{.Label}}</label>
+<select class="uk-select" id="{{.Name}}" name="{{.Name}}"
+        {{if .Target}}
+        hx-get="{{.Target}}"
+        hx-target="{{if eq .Name "namespace"}}#workload-container{{else}}#pod-container{{end}}"
+        hx-include="[name='namespace'],[name='workload']"
+        hx-indicator="#loading"
+        {{end}}>
+    <option value="">Select {{.Label}}</option>
+    {{range .Items}}
+    <option value="{{.}}">{{.}}</option>
+    {{end}}
+</select>

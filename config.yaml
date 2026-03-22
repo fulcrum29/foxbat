@@ -1,0 +1,4 @@
+prometheus:
+  url: "http://localhost:9090"
+server:
+  port: ":9080"

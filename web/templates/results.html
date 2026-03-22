@@ -1,0 +1,57 @@
+<div class="uk-grid uk-child-width-1-2@m" uk-grid>
+    <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
+        <h3 class="uk-card-title uk-text-primary">CPU Recommendations</h3>
+        <table class="uk-table uk-table-striped uk-table-hover">
+            <thead>
+                <tr>
+                    <th>Namespace</th>
+                    <th>Workload</th>
+                    <th>Container</th>
+                    <th>CPU (m)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .CPU}}
+                <tr>
+                    <td>{{.Metric.namespace}}</td>
+                    <td>{{.Metric.owner_name}}</td>
+                    <td>{{.Metric.container}}</td>
+                    <td>{{printf "%.3f" .Value}}</td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="4" class="uk-text-center uk-text-muted">No CPU data found.</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
+        <h3 class="uk-card-title uk-text-secondary">Memory Recommendations</h3>
+        <table class="uk-table uk-table-striped uk-table-hover">
+            <thead>
+                <tr>
+                    <th>Namespace</th>
+                    <th>Workload</th>
+                    <th>Container</th>
+                    <th>RAM (Mi)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Memory}}
+                <tr>
+                    <td>{{.Metric.namespace}}</td>
+                    <td>{{.Metric.owner_name}}</td>
+                    <td>{{.Metric.container}}</td>
+                    <td>{{printf "%.2f" (div .Value 1048576.0)}} Mi</td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="4" class="uk-text-center uk-text-muted">No Memory data found.</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</div>
