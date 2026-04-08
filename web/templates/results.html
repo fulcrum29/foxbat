@@ -13,9 +13,9 @@
             <tbody>
                 {{range .CPU}}
                 <tr>
-                    <td>{{.Metric.namespace}}</td>
-                    <td>{{.Metric.owner_name}}</td>
-                    <td>{{.Metric.container}}</td>
+                    <td>{{$.Namespace}}</td>
+                    <td>{{if $.Workload}}{{$.Workload}}{{else}}All{{end}}</td>
+                    <td>{{index .Metric (label "container")}}</td>
                     <td>{{printf "%.3f" .Value}}</td>
                 </tr>
                 {{else}}
@@ -41,10 +41,10 @@
             <tbody>
                 {{range .Memory}}
                 <tr>
-                    <td>{{.Metric.namespace}}</td>
-                    <td>{{.Metric.owner_name}}</td>
-                    <td>{{.Metric.container}}</td>
-                    <td>{{printf "%.2f" (div .Value 1048576.0)}} Mi</td>
+                    <td>{{$.Namespace}}</td>
+                    <td>{{if $.Workload}}{{$.Workload}}{{else}}All{{end}}</td>
+                    <td>{{index .Metric (label "container")}}</td>
+                    <td>{{printf "%.2f" .Value}}</td>
                 </tr>
                 {{else}}
                 <tr>

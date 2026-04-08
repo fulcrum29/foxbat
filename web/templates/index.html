@@ -19,10 +19,10 @@
         <section class="uk-card uk-card-default uk-card-body uk-border-rounded">
             <h2 class="uk-card-title">Get Recommendations</h2>
             <form hx-get="/ui/recommendations" hx-target="#results" hx-indicator="#loading" class="uk-grid-small" uk-grid>
-                <div class="uk-width-1-3@s">
+                <div class="uk-width-1-2@s">
                     <label class="uk-form-label" for="namespace">Namespace</label>
-                    <select class="uk-select" id="namespace" name="namespace" 
-                            hx-get="/ui/workloads" 
+                    <select class="uk-select" id="namespace" name="namespace"
+                            hx-get="/ui/workloads"
                             hx-target="#workload-container"
                             hx-indicator="#loading">
                         <option value="">Select Namespace</option>
@@ -31,16 +31,10 @@
                         {{end}}
                     </select>
                 </div>
-                <div id="workload-container" class="uk-width-1-3@s">
+                <div id="workload-container" class="uk-width-1-2@s">
                     <label class="uk-form-label" for="workload">Workload (Deployment/SS/DS)</label>
                     <select class="uk-select" id="workload" name="workload" disabled>
                         <option value="">Select Workload</option>
-                    </select>
-                </div>
-                <div id="pod-container" class="uk-width-1-3@s">
-                    <label class="uk-form-label" for="pod">Pod</label>
-                    <select class="uk-select" id="pod" name="pod" disabled>
-                        <option value="">Select Pod</option>
                     </select>
                 </div>
                 <div class="uk-width-1-1">
