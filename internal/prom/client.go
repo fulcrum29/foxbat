@@ -47,7 +47,7 @@ func (c *Client) GetCPURecommendations(ctx context.Context, params QueryParams) 
 		filterStr = "," + strings.Join(filters, ",")
 	}
 
-	query := fmt.Sprintf(`max by (container) (quantile_over_time(0.95, rate(container_cpu_usage_seconds_total{container!="POD", container!=""%s}[5m]) [7d:5m]))`, filterStr)
+	query := fmt.Sprintf(`max by (container,namespace) (quantile_over_time(0.95, rate(container_cpu_usage_seconds_total{container!="POD", container!=""%s}[5m]) [7d:5m]))`, filterStr)
 
 	log.Printf("Querying CPU: %s", query)
 	result, _, err := c.api.Query(ctx, query, time.Now(), promapi.WithTimeout(10*time.Second))

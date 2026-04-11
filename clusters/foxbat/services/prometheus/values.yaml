@@ -6,7 +6,7 @@ kube-prometheus-stack:
   nodeExporter:
     enabled: false
   kubeStateMetrics:
-    enabled: false
+    enabled: true
   prometheus:
     service:
       type: NodePort

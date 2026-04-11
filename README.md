@@ -31,6 +31,5 @@
 - **Code Maintenance**: Refactored handler constructors for better readability and added helper functions for safer template operations.
 
 ## TODO
-- **Fix Prometheus Queries**: Investigate and fix issues with PromQL queries (specifically handling 500 errors for certain workloads).
 - **Time Range Support**: Add the ability to specify time ranges for metrics analysis (e.g., last 1h, 24h, 7d) in the UI and backend.
-- **Unified Logging**: Expand the use of `slog` for structured logging across the entire application (internal modules, K8s client, etc.) beyond just the HTTP middleware.
+- **Add kube-state-metrics**: Add kube-state-metrics and join kube_pod_info metric on to prom queries to show in which workload does it belongs

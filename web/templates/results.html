@@ -13,7 +13,7 @@
             <tbody>
                 {{range .CPU}}
                 <tr>
-                    <td>{{$.Namespace}}</td>
+                    <td>{{if $.Namespace}}{{$.Namespace}}{{else}}{{index .Metric (label "namespace")}}{{end}}</td>
                     <td>{{if $.Workload}}{{$.Workload}}{{else}}All{{end}}</td>
                     <td>{{index .Metric (label "container")}}</td>
                     <td>{{printf "%.3f" .Value}}</td>
@@ -41,7 +41,7 @@
             <tbody>
                 {{range .Memory}}
                 <tr>
-                    <td>{{$.Namespace}}</td>
+                    <td>{{if $.Namespace}}{{$.Namespace}}{{else}}{{index .Metric (label "namespace")}}{{end}}</td>
                     <td>{{if $.Workload}}{{$.Workload}}{{else}}All{{end}}</td>
                     <td>{{index .Metric (label "container")}}</td>
                     <td>{{printf "%.2f" .Value}}</td>
