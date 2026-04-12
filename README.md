@@ -33,3 +33,21 @@
 ## TODO
 - **Time Range Support**: Add the ability to specify time ranges for metrics analysis (e.g., last 1h, 24h, 7d) in the UI and backend.
 - **Add kube-state-metrics**: Add kube-state-metrics and join kube_pod_info metric on to prom queries to show in which workload does it belongs
+
+Updated query that returns `workload` label based on `ReplicaSet`, `DaemonSet` or `StatefulSet` name
+```
+max by (namespace, container, workload_name) (
+  label_replace(
+    (
+      quantile_over_time(0.95,
+        rate(container_cpu_usage_seconds_total{container!="POD", container!="", namespace="kube-system"}[5m])
+      [7d:5m])
+    )
+    * on (pod, namespace) group_left (created_by_name)
+    (
+      kube_pod_info{namespace="kube-system"}
+    ),
+    "workload_name", "$1", "created_by_name", "^(.*?)(-[0-9a-z]{8,10})?$"
+  )
+)
+```
