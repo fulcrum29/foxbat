@@ -117,11 +117,15 @@ func (h *RecommenderHandler) HandleGetPods(w http.ResponseWriter, r *http.Reques
 }
 
 // parseQueryParams reads the namespace, workload and time range from the request.
+// The namespace is required so that a single request never scans the whole cluster.
 func parseQueryParams(r *http.Request) (prom.QueryParams, error) {
 	params := prom.QueryParams{
 		Namespace: r.URL.Query().Get("namespace"),
 		Workload:  r.URL.Query().Get("workload"),
 		Window:    r.URL.Query().Get("window"),
+	}
+	if params.Namespace == "" {
+		return params, fmt.Errorf("namespace is required")
 	}
 	if params.Window == "" {
 		params.Window = prom.DefaultWindow

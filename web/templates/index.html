@@ -21,7 +21,7 @@
             <form hx-get="/ui/recommendations" hx-target="#results" hx-indicator="#loading" class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-2@s">
                     <label class="uk-form-label" for="namespace">Namespace</label>
-                    <select class="uk-select" id="namespace" name="namespace"
+                    <select class="uk-select" id="namespace" name="namespace" required
                             hx-get="/ui/workloads"
                             hx-target="#workload-container"
                             hx-indicator="#loading">
