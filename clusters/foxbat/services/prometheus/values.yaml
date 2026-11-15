@@ -10,3 +10,14 @@ kube-prometheus-stack:
   prometheus:
     service:
       type: NodePort
+    prometheusSpec:
+      # Rekomendacje mogą obejmować do 30 dni historii, więc dane muszą być przechowywane co najmniej tak długo
+      retention: 30d
+      retentionSize: 8GB
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 10Gi

@@ -1,0 +1,24 @@
+image:
+  # Dla klastra kind obraz można załadować poleceniem:
+  #   docker build -t foxbat:dev . && kind load docker-image foxbat:dev --name foxbat-cluster
+  repository: foxbat
+  tag: dev
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+prometheus:
+  # Adres usługi Prometheus zainstalowanej z chartu kube-prometheus-stack
+  url: "http://kube-prometheus-stack-prometheus.prometheus.svc:9090"
+
+service:
+  type: NodePort
+  port: 9080
+  nodePort: 30080
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    memory: 128Mi
