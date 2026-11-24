@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: foxbat
+spec:
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: "foxbat"
+      server: "https://kubernetes.default.svc"
+  clusterResourceWhitelist:
+    - group: "rbac.authorization.k8s.io"
+      kind: "ClusterRole"
+    - group: "rbac.authorization.k8s.io"
+      kind: "ClusterRoleBinding"
+    - group: ""
+      kind: "Namespace"

@@ -10,6 +10,7 @@ type RecommenderData struct {
 	Memory    model.Vector
 	Namespace string
 	Workload  string
+	Window    string
 }
 
 // SelectOptionsData represents the data structure passed to the select-options.html template.
@@ -22,5 +23,7 @@ type SelectOptionsData struct {
 
 // IndexData represents the data structure passed to the index.html template.
 type IndexData struct {
-	Namespaces []string
+	Namespaces    []string
+	Windows       []string
+	DefaultWindow string
 }

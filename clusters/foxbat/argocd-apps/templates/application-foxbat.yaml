@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: foxbat
+  namespace: argocd
+spec:
+  project: foxbat
+  source:
+    path: "{{ .Values.argocd.appPath }}/foxbat"
+    repoURL: "{{ .Values.argocd.sourceRepo }}"
+    targetRevision: HEAD
+    helm:
+      releaseName: foxbat
+      valueFiles:
+        - values.yaml
+  destination:
+    namespace: foxbat
+    server: "{{ .Values.argocd.serverURL }}"
+  syncPolicy:
+    automated:
+      enabled: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
