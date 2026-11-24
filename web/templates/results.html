@@ -17,7 +17,7 @@
                     <td>{{if $.Namespace}}{{$.Namespace}}{{else}}{{index .Metric (label "namespace")}}{{end}}</td>
                     <td>{{if $.Workload}}{{$.Workload}}{{else}}All{{end}}</td>
                     <td>{{index .Metric (label "container")}}</td>
-                    <td>{{printf "%.3f" .Value}}</td>
+                    <td>{{printf "%.0f" .Value}}</td>
                 </tr>
                 {{else}}
                 <tr>

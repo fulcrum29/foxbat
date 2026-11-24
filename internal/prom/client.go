@@ -58,6 +58,7 @@ func (p QueryParams) window() string {
 }
 
 // GetCPURecommendations fetches CPU resource recommendations from Prometheus.
+// The result is the 95th percentile of CPU usage in millicores.
 func (c *Client) GetCPURecommendations(ctx context.Context, params QueryParams) (model.Value, error) {
 	var filters []string
 	if params.Namespace != "" {
@@ -72,7 +73,7 @@ func (c *Client) GetCPURecommendations(ctx context.Context, params QueryParams) 
 		filterStr = "," + strings.Join(filters, ",")
 	}
 
-	query := fmt.Sprintf(`max by (container,namespace) (quantile_over_time(0.95, rate(container_cpu_usage_seconds_total{container!="POD", container!=""%s}[5m]) [%s:5m]))`, filterStr, params.window())
+	query := fmt.Sprintf(`max by (container,namespace) (quantile_over_time(0.95, rate(container_cpu_usage_seconds_total{container!="POD", container!=""%s}[5m]) [%s:5m])) * 1000`, filterStr, params.window())
 
 	log.Printf("Querying CPU: %s", query)
 	result, _, err := c.api.Query(ctx, query, time.Now(), promapi.WithTimeout(10*time.Second))
