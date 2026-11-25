@@ -30,8 +30,28 @@
 - **Template Architecture (`internal/templates/data.go`)**: Moved UI data structures to a dedicated module to improve organization and type safety.
 - **Code Maintenance**: Refactored handler constructors for better readability and added helper functions for safer template operations.
 
+- **Required namespace**: Recommendation requests without a namespace return HTTP 400, so a single request never scans the whole cluster.
+- **Time Range Support**: The analysis time range (1d, 7d, 14d, 30d; default 7d) can be selected in the UI and passed to the API as the `window` query parameter. Invalid values return HTTP 400.
+
+## Deployment
+- **Container image**: `Dockerfile` builds a static binary in a multi-stage build and runs it in a distroless image as a non-root user.
+- **Helm chart** (`clusters/foxbat/services/foxbat`): Deployment, Service (NodePort 30080), ServiceAccount and a read-only ClusterRole for listing namespaces and workloads.
+- **Argo CD** (`clusters/foxbat/argocd-apps/templates/application-foxbat.yaml`): the application is synchronised from this repository like Prometheus.
+- **Prometheus retention**: kube-prometheus-stack keeps 30 days of metrics on a 10Gi volume, so 30-day recommendations are possible.
+
+Local run on kind:
+```
+kind create cluster --config kindconfig.yaml
+docker build -t foxbat:dev .
+kind load docker-image foxbat:dev --name foxbat-cluster
+```
+After Argo CD syncs, the UI is available at http://localhost:9080.
+
+## Experiment
+`experiments/` contains test workloads with known resource usage and the PromQL queries
+used to evaluate the quality of recommendations (backtesting). See `experiments/README.md`.
+
 ## TODO
-- **Time Range Support**: Add the ability to specify time ranges for metrics analysis (e.g., last 1h, 24h, 7d) in the UI and backend.
 - **Add kube-state-metrics**: Add kube-state-metrics and join kube_pod_info metric on to prom queries to show in which workload does it belongs
 
 Updated query that returns `workload` label based on `ReplicaSet`, `DaemonSet` or `StatefulSet` name

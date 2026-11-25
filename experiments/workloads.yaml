@@ -1,0 +1,86 @@
+# Test workloads for the recommendation experiment (thesis, section 3.7).
+# Both deployments deliberately request more resources than they use,
+# so the expected recommendations and savings can be calculated by hand.
+#
+#   load-constant: ~200m CPU all the time (1 s busy every 5 s), ~100 MiB memory
+#   load-daily:    ~400m CPU between 08:00 and 20:00 UTC (2 s busy every 5 s),
+#                  idle at night, ~64 MiB memory
+#
+# The polinux/stress image is Alpine based and provides `stress` and a POSIX shell.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: foxbat-test
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-constant
+  namespace: foxbat-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-constant
+  template:
+    metadata:
+      labels:
+        app: load-constant
+    spec:
+      containers:
+        - name: stress
+          image: polinux/stress
+          command: ["sh", "-c"]
+          args:
+            - |
+              stress --vm 1 --vm-bytes 100M --vm-hang 0 &
+              while true; do
+                timeout 1 sh -c 'while :; do :; done'
+                sleep 4
+              done
+          resources:
+            requests:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-daily
+  namespace: foxbat-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-daily
+  template:
+    metadata:
+      labels:
+        app: load-daily
+    spec:
+      containers:
+        - name: stress
+          image: polinux/stress
+          command: ["sh", "-c"]
+          args:
+            - |
+              stress --vm 1 --vm-bytes 64M --vm-hang 0 &
+              while true; do
+                hour=$(date -u +%H)
+                if [ "$hour" -ge 8 ] && [ "$hour" -lt 20 ]; then
+                  timeout 2 sh -c 'while :; do :; done'
+                  sleep 3
+                else
+                  sleep 5
+                fi
+              done
+          resources:
+            requests:
+              cpu: "1"
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 256Mi

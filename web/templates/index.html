@@ -21,7 +21,7 @@
             <form hx-get="/ui/recommendations" hx-target="#results" hx-indicator="#loading" class="uk-grid-small" uk-grid>
                 <div class="uk-width-1-2@s">
                     <label class="uk-form-label" for="namespace">Namespace</label>
-                    <select class="uk-select" id="namespace" name="namespace"
+                    <select class="uk-select" id="namespace" name="namespace" required
                             hx-get="/ui/workloads"
                             hx-target="#workload-container"
                             hx-indicator="#loading">
@@ -35,6 +35,14 @@
                     <label class="uk-form-label" for="workload">Workload (Deployment/SS/DS)</label>
                     <select class="uk-select" id="workload" name="workload" disabled>
                         <option value="">Select Workload</option>
+                    </select>
+                </div>
+                <div class="uk-width-1-2@s">
+                    <label class="uk-form-label" for="window">Time range</label>
+                    <select class="uk-select" id="window" name="window">
+                        {{range .Windows}}
+                        <option value="{{.}}" {{if eq . $.DefaultWindow}}selected{{end}}>Last {{.}}</option>
+                        {{end}}
                     </select>
                 </div>
                 <div class="uk-width-1-1">

@@ -62,7 +62,9 @@ func (h *RecommenderHandler) HandleIndex(w http.ResponseWriter, r *http.Request)
 	namespaces, _ := h.k8sClient.ListNamespaces(ctx)
 
 	data := templates.IndexData{
-		Namespaces: namespaces,
+		Namespaces:    namespaces,
+		Windows:       prom.AllowedWindows,
+		DefaultWindow: prom.DefaultWindow,
 	}
 
 	if err := h.templates.ExecuteTemplate(w, "index.html", data); err != nil {
@@ -114,13 +116,34 @@ func (h *RecommenderHandler) HandleGetPods(w http.ResponseWriter, r *http.Reques
 	}
 }
 
+// parseQueryParams reads the namespace, workload and time range from the request.
+// The namespace is required so that a single request never scans the whole cluster.
+func parseQueryParams(r *http.Request) (prom.QueryParams, error) {
+	params := prom.QueryParams{
+		Namespace: r.URL.Query().Get("namespace"),
+		Workload:  r.URL.Query().Get("workload"),
+		Window:    r.URL.Query().Get("window"),
+	}
+	if params.Namespace == "" {
+		return params, fmt.Errorf("namespace is required")
+	}
+	if params.Window == "" {
+		params.Window = prom.DefaultWindow
+	}
+	if !prom.ValidWindow(params.Window) {
+		return params, fmt.Errorf("invalid time range %q, allowed values: %v", params.Window, prom.AllowedWindows)
+	}
+	return params, nil
+}
+
 // HandleGetRecommendationsUI processes HTMX requests and returns HTML fragments.
 func (h *RecommenderHandler) HandleGetRecommendationsUI(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	queryParams := prom.QueryParams{
-		Namespace: r.URL.Query().Get("namespace"),
-		Workload:  r.URL.Query().Get("workload"),
+	queryParams, err := parseQueryParams(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	cpuRecs, err := h.promClient.GetCPURecommendations(ctx, queryParams)
@@ -156,6 +179,7 @@ func (h *RecommenderHandler) HandleGetRecommendationsUI(w http.ResponseWriter, r
 		Memory:    memVector,
 		Namespace: queryParams.Namespace,
 		Workload:  queryParams.Workload,
+		Window:    queryParams.Window,
 	}
 
 	if err := h.templates.ExecuteTemplate(w, "results.html", data); err != nil {
@@ -168,9 +192,10 @@ func (h *RecommenderHandler) HandleGetRecommendationsUI(w http.ResponseWriter, r
 func (h *RecommenderHandler) HandleGetRecommendations(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	queryParams := prom.QueryParams{
-		Namespace: r.URL.Query().Get("namespace"),
-		Workload:  r.URL.Query().Get("workload"),
+	queryParams, err := parseQueryParams(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	cpuRecs, err := h.promClient.GetCPURecommendations(ctx, queryParams)

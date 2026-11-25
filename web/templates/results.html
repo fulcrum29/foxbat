@@ -1,3 +1,4 @@
+<p class="uk-text-meta">Analysis time range: last {{.Window}}</p>
 <div class="uk-grid uk-child-width-1-2@m" uk-grid>
     <div class="uk-card uk-card-default uk-card-body uk-border-rounded">
         <h3 class="uk-card-title uk-text-primary">CPU Recommendations</h3>
@@ -16,7 +17,7 @@
                     <td>{{if $.Namespace}}{{$.Namespace}}{{else}}{{index .Metric (label "namespace")}}{{end}}</td>
                     <td>{{if $.Workload}}{{$.Workload}}{{else}}All{{end}}</td>
                     <td>{{index .Metric (label "container")}}</td>
-                    <td>{{printf "%.3f" .Value}}</td>
+                    <td>{{printf "%.0f" .Value}}</td>
                 </tr>
                 {{else}}
                 <tr>
